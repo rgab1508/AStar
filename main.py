@@ -10,6 +10,7 @@ START = Point(0, 0)
 END = Point(40, 30)
 WX = WIDTH/ROWS
 WY = HEIGHT/COLS
+SOLVED = False
 
 grid = []
 
@@ -45,6 +46,7 @@ class Node():
 
     def show(self, win):
         self.r.setFill(self.getColor())
+        self.r.setOutline(self.getColor())
         self.r.draw(win)
 
 
@@ -54,6 +56,7 @@ class Node():
     def redraw(self, win):
         self.undraw()
         self.show(win)
+
 
     def setColor(self, color):
         self.color = color
@@ -120,7 +123,7 @@ def main():
 
 
     def draw_path(path):
-        print(len(path))
+        # print(len(path))
         for p in path:
             p.undraw()
             p.path = True
@@ -148,6 +151,7 @@ def main():
         
         current = openSet[0]
         if current.i == max(0, END.x-1) and current.j == max(0, END.y-1):
+            SOLVED = True
             construct_path(current)
             
         
@@ -167,7 +171,8 @@ def main():
 
         # construct_path(openSet[len(openSet)-1])
 
-    
+    if not SOLVED:
+        print("NO SOLUTION!!")
 
     win.getMouse()
     win.close()
