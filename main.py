@@ -2,6 +2,8 @@ import math
 import random
 from graphics.graphics import *
 
+## BRUHH
+
 WIDTH = 600
 HEIGHT = 600
 ROWS = 50
@@ -94,6 +96,7 @@ class Node():
 
 
 def main():
+    global SOLVED
     win = GraphWin("A*", WIDTH, HEIGHT)
 
     for i in range(ROWS):
@@ -148,6 +151,7 @@ def main():
     
     # print(len(openSet))
     while len(openSet) > 0:
+        global SOLVED
         
         current = openSet[0]
         if current.i == max(0, END.x-1) and current.j == max(0, END.y-1):
