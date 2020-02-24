@@ -149,7 +149,16 @@ def Astar(grid):
             if neighbour in closedSet:
                 continue
             
-            tempG = current.getG() + 1 #Node.distFrom(current, neighbour)
+            # tempG = current.getG() + 1 #Node.distFrom(current, neighbour)
+
+            # if tempG < neighbour.getG():
+            #     neighbour.previous = current
+            #     neighbour.setG(value=tempG)
+            #     neighbour.setF(neighbour.getG() + neighbour.getH())
+
+            #     if neighbour not in openSet and not neighbour.obstacle:
+            #         openSet.append(neighbour)
+            tempG = current.getG() + Node.distFrom(current, neighbour)
 
             if tempG < neighbour.getG():
                 neighbour.previous = current
@@ -198,6 +207,7 @@ def main():
                 for j in range(COLS):
                     if grid[i][j].contains(m):
                         START.x , START.y = i, j
+                        grid[i][j].obstacle = False 
                         grid[i][j].start = True
                         grid[i][j].redraw(WIN)
 
@@ -207,13 +217,16 @@ def main():
                 for j in range(COLS):
                     if grid[i][j].contains(m):
                         END.x, END.y = i+1, j+1
+                        grid[i][j].obstacle = False
                         grid[i][j].end = True
+
                         grid[i][j].redraw(WIN)
 
         if k.lower() == "w":
             # obs = []
             def add_to_obs(event):
-                m = Point(event.x_root, event.y_root)
+                global grid
+                m = Point(event.x, event.y)
                 print(m)
                 for i in range(ROWS):
                     for j in range(COLS):
