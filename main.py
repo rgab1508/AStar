@@ -124,7 +124,7 @@ def getLowest(openSet):
         
     return lowestNode
 
-def Astar():
+def Astar(grid):
     print("A starring...")
     openSet = []
     closedSet = []
@@ -149,23 +149,23 @@ def Astar():
             if neighbour in closedSet:
                 continue
             
-            tempG = current.getG() + 1#Node.distFrom(current, neighbour)
+            tempG = current.getG() + 1 #Node.distFrom(current, neighbour)
 
-            # if tempG < neighbour.getG():
-            #     neighbour.previous = current
-            #     neighbour.setG(value=tempG)
-            #     neighbour.setF(neighbour.getG() + neighbour.getH())
-
-            #     if neighbour not in openSet and not neighbour.obstacle:
-            #         openSet.append(neighbour)
-            if neighbour in closedSet and tempG >= neighbour.getG():
-                    continue
-            if neighbour not in closedSet or tempG < neighbour.getG():
+            if tempG < neighbour.getG():
                 neighbour.previous = current
                 neighbour.setG(value=tempG)
                 neighbour.setF(neighbour.getG() + neighbour.getH())
-                if neighbour not in openSet:
+
+                if neighbour not in openSet and not neighbour.obstacle:
                     openSet.append(neighbour)
+            # if neighbour in closedSet and tempG >= neighbour.getG():
+            #         continue
+            # if neighbour not in closedSet or tempG < neighbour.getG():
+            #     neighbour.previous = current
+            #     neighbour.setG(value=tempG)
+            #     neighbour.setF(neighbour.getG() + neighbour.getH())
+            #     if neighbour not in openSet:
+            #         openSet.append(neighbour)
 
         # construct_path(openSet[len(openSet)-1])
 
@@ -173,8 +173,9 @@ def Astar():
 def main():
     global SOLVED
     global WIN
+    global grid
     WIN = GraphWin("A*", WIDTH, HEIGHT)
-
+    WIN.bind()
     for i in range(ROWS):
         _ = []
         for j in range(COLS):
@@ -187,8 +188,6 @@ def main():
     for i in range(ROWS):
         for j in range(COLS):
             grid[i][j].show(WIN)
-
-
 
         
     while True:
@@ -212,12 +211,21 @@ def main():
                         grid[i][j].redraw(WIN)
 
         if k.lower() == "w":
-            m = WIN.getMouse()
-            for i in range(ROWS):
-                for j in range(COLS):
-                    if grid[i][j].contains(m):
-                        grid[i][j].obstacle = True
-                        grid[i][j].redraw(WIN)
+            # obs = []
+            def add_to_obs(event):
+                m = Point(event.x_root, event.y_root)
+                print(m)
+                for i in range(ROWS):
+                    for j in range(COLS):
+                        if grid[i][j].contains(m):
+                            if not grid[i][j].obstacle:
+                                grid[i][j].obstacle = True
+                                grid[i][j].redraw(WIN)
+                # obs.append([event.x_root, event.y_root])
+
+            WIN.bind("<B1-Motion>", add_to_obs)
+            
+                
 
         if k.lower() == "d":
             m = WIN.getMouse()
@@ -234,7 +242,7 @@ def main():
                     grid[i][j].get_neighbours()
                     grid[i][j].setG()
                     grid[i][j].setH()
-            Astar()
+            Astar(grid)
             # construct_path()
             if not SOLVED:
                 print("NO SOLUTION!!")
